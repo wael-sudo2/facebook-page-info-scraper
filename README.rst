@@ -1,6 +1,7 @@
-=======================
+==============================
 facebook-page-info-scraper
-=======================
+==============================
+
 
 .. image:: https://img.shields.io/pypi/v/facebook-page-info-scraper.svg
     :target: https://pypi.python.org/pypi/facebook-page-info-scraper
