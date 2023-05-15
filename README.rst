@@ -14,7 +14,7 @@ facebook-page-info-scraper
 Introduction
 ------------
 
-facebook-page-info-scraper is a Python package that provides a convenient way to crawl information from Facebook pages. It uses Selenium for web scraping and provides functionalities to retrieve page details such as page name, description, followers count, and more.
+facebook-page-info-scraper is a Python package that provides a convenient way to crawl information from Facebook pages. It uses Selenium for web scraping and provides functionalities to retrieve page details such as page name, Category, Address, email, followers count, and more.
 
 Installation
 ------------
