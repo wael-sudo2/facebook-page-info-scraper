@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import time
 
 from retry import retry
 from selenium.webdriver.chrome.options import Options
@@ -16,7 +15,6 @@ from selenium.webdriver.remote.webelement import WebElement
 import re
 from geopy.geocoders import Nominatim
 import urllib.parse
-import pandas as pd
 from googletrans import Translator
 
 logger = logging.getLogger(__name__)
