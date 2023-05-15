@@ -446,7 +446,7 @@ class Facebook_Page_Info_Scraper:
                 "email": email,
                 "page_website": urls,
                 "social_media_links": links,
-                'phone': phone,
+                'phone_number': phone,
                 'location': location,
                 'rate_': rate,
                 'review_number': review_number
@@ -473,7 +473,7 @@ class Facebook_Page_Info_Scraper:
             logger.warning('the link you followed is private or not a page: ',
                            self.driver.current_url)
 
-    def fetch_contact_and_basic_info(self):
+    def get_page_info(self):
         try:
             return self.fetch_functions()
         except (StaleElementReferenceException, NoSuchElementException) as e:
