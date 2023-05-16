@@ -20,14 +20,14 @@ from googletrans import Translator
 logger = logging.getLogger(__name__)
 
 
-class Facebook_Page_Info_Scraper:
+class FacebookPageInfoScraper:
     driver = None
     old_layout_web_element = None
     info_web_element = None
 
     def __init__(self, link):
-        if not FacebookScraper.driver:
-            FacebookScraper.driver = self.__private_webdriver_setup()
+        if not FacebookPageInfoScraper.driver:
+            FacebookPageInfoScraper.driver = self.__private_webdriver_setup()
             self.background_image_followers = "https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/arPWOVoq57s.png"
             self.background_image_likes = "https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/arPWOVoq57s.png"
         self.link = link
