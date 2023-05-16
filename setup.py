@@ -5,7 +5,7 @@ with open('README.rst', 'r', encoding='utf-8') as f:
 
 setup(
     name='facebook-page-info-scraper',
-    version='1.0.0',
+    version='1.0.1',
     author='Wael hkiri',
     author_email='wael.hkiri.dev@gmail.com',
     description='A Python package capable of crawling Facebook page information',
