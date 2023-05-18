@@ -23,7 +23,7 @@ Use pip to install the package:
 
 .. code-block:: shell
 
-    pip install facebook-page-info-scraper
+    pip install facebook_page_info_scraper
 
 Usage
 -----
