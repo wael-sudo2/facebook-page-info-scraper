@@ -176,7 +176,7 @@ class FacebookPageInfoScraper:
         translation = translator.translate(default_text, dest='en')
         return translation.text
 
-    def __private_fetch_likes_followers_from_text_old_layout(self,default_web_element: [WebElement]):
+    def __private_fetch_likes_followers_from_text_old_layout(self,default_web_element: list[WebElement]):
         found_like = False
         found_follow = False
         page_followers = None

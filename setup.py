@@ -4,7 +4,7 @@ with open('README.rst', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='facebook-page-info-scraper',
+    name='facebook_page_info_scraper',
     version='1.0.6',
     author='Wael hkiri',
     author_email='wael.hkiri.dev@gmail.com',
