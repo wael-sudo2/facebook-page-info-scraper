@@ -33,13 +33,14 @@ To use the package, import the `FacebookPageInfoScraper` class and create an ins
 .. code-block:: python
 
     from facebook_page_info_scraper import FacebookPageInfoScraper
-
-    # Create an instance of the scraper
-    scraper = FacebookPageInfoScraper().
-
-    # Scrape page information by providing the page URL
+    
     page_url = 'https://www.facebook.com/example-page'
-    page_info = scraper.get_page_info(link = page_url)
+    
+    # Create an instance of the scraper
+    scraper = FacebookPageInfoScraper(link=page_url)
+    # Scrape page information by providing the page URL
+    
+    page_info = scraper.get_page_info()
 
     # Print page details
     print(f'Page Name: {page_info["page_name"]}')
