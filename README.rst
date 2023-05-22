@@ -14,7 +14,49 @@ facebook-page-info-scraper
 Introduction
 ------------
 
-facebook-page-info-scraper is a Python package that provides a convenient way to crawl information from Facebook pages. It uses Selenium for web scraping and provides functionalities to retrieve page details such as page name, Category, Address, email, followers count, and more.
+facebook-page-info-scraper is a Python package that provides a convenient way to crawl information from Facebook pages.
+you'll have the power to scrape Facebook data with unlimited calls.
+Whether you're a researcher, a data enthusiast, or a developer building Facebook-related projects, this library can significantly simplify your data extraction process.
+It uses Selenium for web scraping and provides functionalities to retrieve page details such as page name, Category, Address, email, followers count, and more.
+
+Dictionary Contents {#dictionary-section}
+------------------
+
+This section provides an overview of the dictionary contents.
+
+Dictionary Fields
+~~~~~~~~~~~~~~~~~
+
+- `page_name`: The name of the page.
+- `location`: The location of the page.
+- `email`: The email associated with the page.
+- `phone_number`: The phones number associated with the page
+- `social_media_links`: Links to the page's social media accounts.
+- `page_website`: The websites link associated with the page
+- `page_category`: The category of the page.
+- `page_followers`: The page number of followers.
+- `page_following`: The number of following.
+- `page_likes`: The page  number of likes.
+- `page_rate`: The page  rates number.
+- `review_number`: The page  reviews number.
+
+This section provides an overview of the dictionary keys and types.
+
+Dictionary Keys
+~~~~~~~~~~~~~~~~~
+
+- `page_name`: string
+- `location`: string or None
+- `email`: string or None
+- `phone_number`: string or list of strings or None
+- `social_media_links`: string or list of strings or None
+- `page_website`: string or list of strings or None
+- `page_category`: string
+- `page_followers`: string
+- `page_following`: string
+- `page_likes`: string
+- `page_rate`: string
+- `review_number`: string
 
 Installation
 ------------
@@ -34,19 +76,31 @@ To use the package, import the `FacebookPageInfoScraper` class and create an ins
 
     from facebook_page_info_scraper import FacebookPageInfoScraper
     
+    # providing the page URL
     page_url = 'https://www.facebook.com/example-page'
     
     # Create an instance of the scraper
     scraper = FacebookPageInfoScraper(link=page_url)
-    # Scrape page information by providing the page URL
     
     page_info = scraper.get_page_info()
 
     # Print page details
-    print(f'Page Name: {page_info["page_name"]}')
-    print(f'Page Category: {page_info["page_category"]}')
-    print(f'Page website: {page_info["page_website"]}')
+    print(page_info)
 
+    page_info = {
+       'page_name': 'Example Page', 
+       'location': 'Some Location', 
+       'email': 'example@example.com', 
+       'phone_number': '+33 536337',
+       'social_media_links': 'www.instagram.com/example',
+       'page_website': 'http://example.com',
+       'page_category': 'Some category',
+       'page_likes': '36,565',
+       'page_followers': '38,225'
+       'page_following': '120'
+       'page_rate': '33'
+       'review_number': '4.6'
+   }
 Contributing
 ------------
 

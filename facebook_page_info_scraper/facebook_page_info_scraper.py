@@ -448,8 +448,8 @@ class FacebookPageInfoScraper:
                 "social_media_links": links,
                 'phone_number': phone,
                 'location': location,
-                'rate_': rate,
-                'review_number': review_number
+                'page_rate': rate,
+                'page_review_number': review_number
             }
             likes_follow_followers = self.__private_fetch_follower_likes_new_layout()
             data_collected.update(likes_follow_followers)
