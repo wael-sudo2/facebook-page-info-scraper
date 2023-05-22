@@ -101,6 +101,7 @@ To use the package, import the `FacebookPageInfoScraper` class and create an ins
        'page_rate': '33'
        'review_number': '4.6'
    }
+
 Contributing
 ------------
 
