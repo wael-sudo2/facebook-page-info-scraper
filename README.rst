@@ -20,7 +20,7 @@ Whether you're a researcher, a data enthusiast, or a developer building Facebook
 It uses Selenium for web scraping and provides functionalities to retrieve page details such as page name, Category, Address, email, followers count, and more.
 
 Dictionary Contents {#dictionary-section}
-------------------
+-----------------------------------------
 
 This section provides an overview of the dictionary contents.
 
