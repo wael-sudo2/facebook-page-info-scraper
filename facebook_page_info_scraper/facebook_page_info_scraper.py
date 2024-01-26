@@ -375,12 +375,15 @@ class FacebookPageInfoScraper:
 
     def __private_fetch_location(self):
         try:
+            location = None
             web_element = self.info_web_element.find_element(
                 By.CLASS_NAME, value='x1hq5gj4')
-            if web_element.text.endswith('Address'):
-                location = web_element.text[:-len('Address ')]
+            location = web_element.find_element(By.CSS_SELECTOR,"span[dir='auto']").text
+            
+            if location:
                 return location
-
+                        
+            
             location_web_element = web_element.find_element(By.CLASS_NAME,
                                                             value='x1n2onr6')
             attrs = self.driver.execute_script(
