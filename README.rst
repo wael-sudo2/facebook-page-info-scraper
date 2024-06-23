@@ -2,7 +2,6 @@
 facebook-page-info-scraper
 ==============================
 
-
 .. image:: https://img.shields.io/pypi/v/facebook-page-info-scraper.svg
     :target: https://pypi.python.org/pypi/facebook-page-info-scraper
     :alt: Latest Version
@@ -11,16 +10,28 @@ facebook-page-info-scraper
     :target: https://pypi.python.org/pypi/facebook-page-info-scraper
     :alt: Supported Python Versions
 
+.. image:: https://static.pepy.tech/badge/facebook-page-info-scraper
+    :target: https://pepy.tech/project/facebook-page-info-scraper
+    :alt: Downloads
+
+.. image:: https://static.pepy.tech/badge/facebook-page-info-scraper/month
+    :target: https://pepy.tech/project/facebook-page-info-scraper
+    :alt: Monthly Downloads
+
+.. image:: https://static.pepy.tech/badge/facebook-page-info-scraper/week
+    :target: https://pepy.tech/project/facebook-page-info-scraper
+    :alt: Weekly Downloads
+
 Introduction
 ------------
 
 facebook-page-info-scraper is a Python package that provides a convenient way to crawl information from Facebook pages.
-you'll have the power to scrape Facebook data with unlimited calls.
+You'll have the power to scrape Facebook data with unlimited calls.
 Whether you're a researcher, a data enthusiast, or a developer building Facebook-related projects, this library can significantly simplify your data extraction process.
-It uses Selenium for web scraping and provides functionalities to retrieve page details such as page name, Category, Address, email, followers count, and more.
+It uses Selenium for web scraping and provides functionalities to retrieve page details such as page name, category, address, email, followers count, and more.
 
-Dictionary Contents {#dictionary-section}
------------------------------------------
+Dictionary Contents
+-------------------
 
 This section provides an overview of the dictionary contents.
 
@@ -30,20 +41,20 @@ Dictionary Fields
 - `page_name`: The name of the page.
 - `location`: The location of the page.
 - `email`: The email associated with the page.
-- `phone_number`: The phones number associated with the page
+- `phone_number`: The phone number associated with the page.
 - `social_media_links`: Links to the page's social media accounts.
-- `page_website`: The websites link associated with the page
+- `page_website`: The website link associated with the page.
 - `page_category`: The category of the page.
-- `page_followers`: The page number of followers.
+- `page_followers`: The number of followers.
 - `page_following`: The number of following.
-- `page_likes`: The page  number of likes.
-- `page_rate`: The page  rates number.
-- `review_number`: The page  reviews number.
+- `page_likes`: The number of likes.
+- `page_rate`: The page rate.
+- `review_number`: The number of reviews.
 
 This section provides an overview of the dictionary keys and types.
 
 Dictionary Keys
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 - `page_name`: string
 - `location`: string or None
@@ -101,6 +112,35 @@ To use the package, import the `FacebookPageInfoScraper` class and create an ins
        'page_rate': '33'
        'review_number': '4.6'
    }
+
+To use the `facebook_page_info_scraper` with a specific user profile:
+
+.. code-block:: python
+
+    from facebook_page_info_scraper import FacebookPageInfoScraper
+        
+    # providing the page URL
+    page_url = 'https://www.facebook.com/example-page'
+
+    # provide location where Chrome stores profiles
+    profiles_path = r'C:\Users\<username>\AppData\Local\Google\Chrome\User Data' # make sure to prefix the path with r'' to create a raw string 
+
+    # provide the profile name with which we want to open browser
+    profile = r'Profile 1' # make sure to prefix it with r'' to create a raw string 
+
+    # Create an instance of the scraper
+    scraper = FacebookPageInfoScraper(link=page_url, browser_profiles_path=profiles_path, profile_name=profile)
+
+    page_info = scraper.get_page_info()
+
+* To locate your Chrome profile path, you can usually find it at:
+
+    - **Windows:**
+      ``C:\Users\<username>\AppData\Local\Google\Chrome\User Data``
+    - **macOS:**
+      ``/Users/<username>/Library/Application Support/Google/Chrome/``
+    - **Linux:**
+      ``~/.config/google-chrome/`` (replace `~` with your home directory)
 
 Contributing
 ------------

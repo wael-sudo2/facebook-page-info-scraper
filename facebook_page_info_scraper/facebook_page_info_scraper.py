@@ -25,9 +25,9 @@ class FacebookPageInfoScraper:
     old_layout_web_element = None
     info_web_element = None
 
-    def __init__(self, link):
+    def __init__(self, link,browser_profiles_path = None, profile_name = None):
         if not FacebookPageInfoScraper.driver:
-            FacebookPageInfoScraper.driver = self.__private_webdriver_setup()
+            FacebookPageInfoScraper.driver = self.__private_webdriver_setup(browser_profiles_path, profile_name)
             self.background_image_followers = "https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/arPWOVoq57s.png"
             self.background_image_likes = "https://static.xx.fbcdn.net/rsrc.php/v3/y9/r/arPWOVoq57s.png"
         self.link = link
@@ -42,16 +42,22 @@ class FacebookPageInfoScraper:
             self.new_layout_links = self.__private_get_new_layout_links()
 
     @staticmethod
-    def __private_webdriver_setup() -> webdriver:
+    def __private_webdriver_setup(browser_profiles_path = None, profile_name = None) -> webdriver:
         try:
             options = Options()
-
             # Code to disable notifications pop up of Chrome Browser
-            options.add_argument("--disable-notifications")
-            options.add_argument("--disable-infobars")
-            options.add_argument("--mute-audio")
-            options.add_argument("--start-maximized")
-            options.add_argument("headless")
+
+            if browser_profiles_path:
+                options.add_argument(f'--user-data-dir={browser_profiles_path}')
+                options.add_argument(f'--profile-directory={profile_name}')
+                options.add_argument("--no-sandbox")
+                options.add_argument("headless")
+            else:
+                options.add_argument("--disable-notifications")
+                options.add_argument("--disable-infobars")
+                options.add_argument("--mute-audio")
+                options.add_argument("--start-maximized")
+                options.add_argument("headless")
 
             web_driver = webdriver.Chrome(options=options)
             return web_driver
@@ -471,6 +477,7 @@ class FacebookPageInfoScraper:
             data_collected.update(
                 self.__private_get_category_likes_followers_old_layout()
             )
+            self.driver.close()
             return data_collected
         else:
             logger.warning('the link you followed is private or not a page: ',
@@ -481,4 +488,3 @@ class FacebookPageInfoScraper:
             return self.fetch_functions()
         except (StaleElementReferenceException, NoSuchElementException) as e:
             logger.warning("Failed to fetch page data due the error", e)
-
