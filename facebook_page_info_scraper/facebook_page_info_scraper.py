@@ -12,6 +12,8 @@ from selenium.common.exceptions import NoSuchElementException, \
 from selenium import webdriver
 from typing import Optional, List, Any, Tuple, Union
 from selenium.webdriver.remote.webelement import WebElement
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
 import re
 from geopy.geocoders import Nominatim
 import urllib.parse
@@ -59,7 +61,7 @@ class FacebookPageInfoScraper:
                 options.add_argument("--start-maximized")
                 options.add_argument("headless")
 
-            web_driver = webdriver.Chrome(options=options)
+            web_driver = webdriver.Chrome(options=options, service=Service(ChromeDriverManager().install()))
             return web_driver
         except Exception as e:
             print("Error setting up webdriver.", e)
