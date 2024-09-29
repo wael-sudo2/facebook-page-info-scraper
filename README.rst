@@ -2,6 +2,10 @@
 facebook-page-info-scraper
 ==============================
 
+`Buy me a Sandwich <https://www.buymeacoffee.com/sp0t__>`_ 
+.. image:: https://img.buymeacoffee.com/button-api/?text=Buy me a Sandwich&emoji=🥪&slug=sp0t__&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff
+
+
 .. image:: https://img.shields.io/pypi/v/facebook-page-info-scraper.svg
     :target: https://pypi.python.org/pypi/facebook-page-info-scraper
     :alt: Latest Version
