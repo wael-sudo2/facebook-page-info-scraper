@@ -5,12 +5,10 @@ facebook-page-info-scraper
 Support the Project
 ===================
 
-If you find this project helpful, consider buying me a coffee!
+If you find this project helpful, consider buying me a sandwich! 🥪
 
-.. image:: https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png
-   :alt: Buy Me A Coffee
-   :height: 60px
-   :width: 217px
+.. image:: https://github.com/wael-sudo2/bumecoffe/blob/main/buy-me-a-sandiwch-button.png
+   :alt: Buy Me A Sandwich
    :target: https://www.buymeacoffee.com/sp0t__
 
 .. image:: https://img.shields.io/pypi/v/facebook-page-info-scraper.svg
