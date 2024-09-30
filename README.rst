@@ -20,11 +20,11 @@ facebook-page-info-scraper
 
 Introduction
 ------------
-`facebook-page-info-scraper` is a Python package that provides a convenient way to crawl information from Facebook pages. You'll have the power to scrape Facebook data with unlimited calls. Whether you're a researcher, a data enthusiast, or a developer building Facebook-related projects, this library can significantly simplify your data extraction process. It uses Selenium for web scraping and provides functionalities to retrieve page details such as page name, category, address, email, followers count, and more.
+`facebook-page-info-scraper` is a Python package that provides a convenient way to crawl information from Facebook pages. With this package, you can scrape Facebook data with unlimited calls. Whether you're a researcher, a data enthusiast, or a developer working on Facebook-related projects, this library simplifies the data extraction process. It uses Selenium for web scraping and retrieves Facebook page details such as the page name, category, address, email, follower count, and more.
 
 Support the Project
 -------------------
-If you find this project helpful, consider buying me a sandwich! 🥪
+If you find this project helpful, consider supporting by buying me a sandwich! 🥪
 
 .. image:: https://github.com/wael-sudo2/bumecoffe/blob/main/buy-me-a-sandiwch-button.png
    :alt: Buy Me A Sandwich
@@ -32,29 +32,29 @@ If you find this project helpful, consider buying me a sandwich! 🥪
 
 Dictionary Contents
 -------------------
-This section provides an overview of the dictionary contents.
+This section provides an overview of the dictionary fields returned by the scraper.
 
 ### Dictionary Fields
-- `page_name`: The name of the page.
+- `page_name`: The name of the Facebook page.
 - `location`: The location of the page.
-- `email`: The email associated with the page.
+- `email`: The email address associated with the page.
 - `phone_number`: The phone number associated with the page.
-- `social_media_links`: Links to the page's social media accounts.
+- `social_media_links`: Social media account links of the page.
 - `page_website`: The website link associated with the page.
-- `page_category`: The category of the page.
+- `page_category`: The category of the Facebook page.
 - `page_followers`: The number of followers.
-- `page_following`: The number of following.
-- `page_likes`: The number of likes.
-- `page_rate`: The page rate.
-- `review_number`: The number of reviews.
+- `page_following`: The number of accounts the page is following.
+- `page_likes`: The total number of likes on the page.
+- `page_rate`: The rating of the page.
+- `review_number`: The total number of reviews for the page.
 
 ### Dictionary Keys
 - `page_name`: string
 - `location`: string or None
 - `email`: string or None
-- `phone_number`: string or list of strings or None
-- `social_media_links`: string or list of strings or None
-- `page_website`: string or list of strings or None
+- `phone_number`: string, list of strings, or None
+- `social_media_links`: string, list of strings, or None
+- `page_website`: string, list of strings, or None
 - `page_category`: string
 - `page_followers`: string
 - `page_following`: string
@@ -64,8 +64,7 @@ This section provides an overview of the dictionary contents.
 
 Installation
 ------------
-Use pip to install the package:
+To install the package, run the following command:
 
-```shell
+```bash
 pip install facebook_page_info_scraper
-```
