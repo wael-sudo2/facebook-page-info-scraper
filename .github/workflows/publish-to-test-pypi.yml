@@ -19,7 +19,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.x"
+        python-version: "3.10"  # Use a specific version of Python
 
     - name: Install dependencies
       run: |
@@ -27,10 +27,12 @@ jobs:
         pip install build twine
 
     - name: Bump version
+      id: bump_version  # Set an id to refer to this step's output
       run: |
         current_version=$(grep -oP '(?<=version=").*(?=")' setup.py)
         new_version=$(echo $current_version | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
         sed -i "s/version=\"$current_version\"/version=\"$new_version\"/" setup.py
+        echo "::set-output name=new_version::$new_version"  # Set new_version as an output
 
     - name: Build a binary wheel and a source tarball
       run: python -m build
@@ -39,19 +41,19 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
-      continue-on-error: true
+      continue-on-error: false  # Catch errors if any
 
     - name: Publish distribution 📦 to PyPI
-      if: github.ref == 'refs/heads/main' && success()
+      if: github.ref == 'refs/heads/main' && always()
       uses: pypa/gh-action-pypi-publish@release/v1
 
     - name: Create GitHub Release
-      if: github.ref == 'refs/heads/main' && success()
+      if: github.ref == 'refs/heads/main' && always()
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ steps.bump_version.outputs.new_version }}
+        tag_name: v${{ steps.bump_version.outputs.new_version }}  # Reference the bumped version
         release_name: Release ${{ steps.bump_version.outputs.new_version }}
         draft: false
         prerelease: false
