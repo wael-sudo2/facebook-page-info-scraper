@@ -87,7 +87,7 @@ class FacebookPageInfoScraper:
 
     def __private_fetch_basic_info_web_element(self) -> WebElement | None:
 
-        WebDriverWait(self.driver, 3).until(
+        WebDriverWait(self.driver, 5).until(
             EC.presence_of_element_located((By.TAG_NAME, 'body'))
         )
         try:
@@ -103,7 +103,7 @@ class FacebookPageInfoScraper:
     # fetch css layout 1 or 2
     def __private_fetch_css_layout(self):
         self.driver.get(self.__private_clean(self.link))
-        WebDriverWait(self.driver, 3).until(
+        WebDriverWait(self.driver, 5).until(
             EC.presence_of_element_located((By.TAG_NAME, 'body'))
         )
         try:
