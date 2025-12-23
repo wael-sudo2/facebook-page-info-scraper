@@ -18,17 +18,13 @@ facebook-page-info-scraper
     :target: https://pepy.tech/project/facebook-page-info-scraper
     :alt: Weekly Downloads
 
+Future Improvements
+-------------------
+AI based crawling
+
 Introduction
 ------------
 `facebook-page-info-scraper` is a Python package that provides a convenient way to crawl information from Facebook pages. With this package, you can scrape Facebook data with unlimited calls. Whether you're a researcher, a data enthusiast, or a developer working on Facebook-related projects, this library simplifies the data extraction process. It uses Selenium for web scraping and retrieves Facebook page details such as the page name, category, address, email, follower count, and more.
-
-Support the Project
--------------------
-If you find this project helpful, consider supporting by buying me a sandwich! 🥪
-
-.. image:: https://github.com/wael-sudo2/bumecoffe/blob/main/buy-me-a-sandiwch-button.png
-   :alt: Buy Me A Sandwich
-   :target: https://www.buymeacoffee.com/sp0t__
 
 Dictionary Contents
 -------------------
