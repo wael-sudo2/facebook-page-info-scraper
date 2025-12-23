@@ -74,7 +74,7 @@ jobs:
           path: dist/
 
       - name: Sign distributions with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v2.2.0
+        uses: sigstore/gh-action-sigstore-python@v2
         with:
           inputs: |
             dist/*.whl
