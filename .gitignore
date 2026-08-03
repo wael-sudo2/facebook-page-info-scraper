@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+# Scrape outputs
+urls_smoke.txt
+urls.txt
+
+# Scrape outputs
+*.jsonl
+pages.json
+pages.jsonl
+output.json
+demo_output.json
+about_results.jsonl
+bench_*.jsonl
+
+# Captured pages / diagnostics (regenerable, and large)
+probe_page.html
+probe_dump/
+probe_blobs/
+about_section.json
+spike_shots/
+spike_shots_splash/
+test_scraper.py
+TECHNICAL.md
+# Secrets - never commit API keys
+.env
+secrets.*

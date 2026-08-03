@@ -1,0 +1,12 @@
+include README.md
+include LICENSE.txt
+
+exclude TECHNICAL.md
+
+# Working data and run outputs - never ship these
+exclude urls.txt urls_smoke.txt
+exclude pages.json pages.jsonl pages_browser.jsonl output.json
+exclude scrape.py test_scraper.py
+
+global-exclude *.py[cod]
+global-exclude __pycache__/*
