@@ -1,11 +1,21 @@
 # __init__.py
 from .version import __version__
 from .client import scrape_page, scrape_pages, summarise
+from .enrich import (
+    enrich_records,
+    enrich_site,
+    fingerprint_available,
+    summarise_enrichment,
+)
 
 __all__ = [
     "scrape_page",
     "scrape_pages",
     "summarise",
+    "enrich_records",
+    "enrich_site",
+    "summarise_enrichment",
+    "fingerprint_available",
     "FacebookPageInfoScraper",
     "FacebookPageSpider",
     "__version__",
