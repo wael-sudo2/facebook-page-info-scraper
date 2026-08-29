@@ -9,7 +9,10 @@ venv/
 # Scrape outputs
 urls_smoke.txt
 urls.txt
-
+enriched.json
+enrich_probe.json
+test_enrich.py
+enrich_probe.py
 # Scrape outputs
 *.jsonl
 pages.json
