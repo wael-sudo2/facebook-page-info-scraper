@@ -1,0 +1,26 @@
+%% Source for docs/enrichment-flow.png - regenerate with:
+%%   npx -y @mermaid-js/mermaid-cli -i docs/enrichment-flow.mmd \
+%%       -o docs/enrichment-flow.png -b white -w 1500
+%%
+%% The README references the PNG, not this file: PyPI does not render
+%% mermaid, and raw.githubusercontent serves .svg as text/plain so an SVG
+%% would silently fail to display there.
+flowchart TD
+    A["Records with a website<br/>but no email"] --> B["Fetch the homepage"]
+    B --> C{"Blocked by a<br/>bot challenge?"}
+    C -->|yes| D["Retry with a browser<br/>TLS fingerprint<br/>automatic"]
+    C -->|no| E{"Any email<br/>on the page?"}
+    D --> E
+    E -->|yes| I["Company inbox,<br/>or a person?<br/>opt-in, needs an API key"]
+    E -->|no| F["Try /contact, /kontakt,<br/>/contacto, /impressum ..."]
+    F --> G{"Found now?"}
+    G -->|yes| I
+    G -->|no| H["no_contact_found"]
+    I --> J["Score every candidate"]
+    J --> K["enriched_email<br/>+ confidence + reasons"]
+
+    style A fill:#e8f0fe,stroke:#4285f4,stroke-width:2px,color:#111
+    style K fill:#e6f4ea,stroke:#34a853,stroke-width:2px,color:#111
+    style H fill:#fce8e6,stroke:#ea4335,stroke-width:2px,color:#111
+    style D fill:#fff7e6,stroke:#f9ab00,stroke-dasharray: 5 5,color:#111
+    style I fill:#fff7e6,stroke:#f9ab00,stroke-dasharray: 5 5,color:#111

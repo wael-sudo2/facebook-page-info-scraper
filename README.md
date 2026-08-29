@@ -154,32 +154,18 @@ skipped, and sites shared by several pages are fetched once.
 
 ### How it works
 
-```mermaid
-flowchart TD
-    A["Records with a website<br/>but no email"] --> B["Fetch the homepage"]
-    B --> C{"Blocked by a<br/>bot challenge?"}
-    C -->|yes| D["Retry with a browser<br/>TLS fingerprint<br/>(automatic)"]
-    C -->|no| E{"Any email<br/>on the page?"}
-    D --> E
-    E -->|yes| I["Company inbox,<br/>or a person?<br/>(opt-in, needs a key)"]
-    E -->|no| F["Try /contact, /kontakt,<br/>/contacto, /impressum ..."]
-    F --> G{"Found now?"}
-    G -->|yes| I
-    G -->|no| H["no_contact_found"]
-    I --> J["Score every candidate"]
-    J --> K["enriched_email<br/>+ confidence + reasons"]
+<p align="center">
+<img src="https://raw.githubusercontent.com/wael-sudo2/facebook-page-info-scraper/main/docs/enrichment-flow.png"
+     alt="Enrichment flow: fetch the homepage; retry bot-challenged sites with a browser TLS
+          fingerprint; fall back to /contact-style pages; decide company inbox versus person;
+          score every candidate into enriched_email with confidence and reasons."
+     width="760">
+</p>
 
-    style A fill:#e8f0fe,stroke:#4285f4,color:#111
-    style K fill:#e6f4ea,stroke:#34a853,color:#111
-    style H fill:#fce8e6,stroke:#ea4335,color:#111
-    style D stroke-dasharray: 5 5
-    style I stroke-dasharray: 5 5
-```
-
-Both dashed steps ship with the package. The fingerprint retry happens on
-its own; the LLM step is the only thing you switch on, and it needs just an
-API key. Leave it off and every address is still found and scored — only the
-`role` / `personal` label is left as `unknown`.
+Both marked steps ship with the package. The fingerprint retry happens on its
+own; the role/person check is the only thing you switch on, and it needs just
+an API key. Leave it off and every address is still found and scored — only
+the `role` / `personal` label is left as `unknown`.
 
 ### Nothing is thrown away
 
