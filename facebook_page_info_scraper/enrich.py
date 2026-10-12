@@ -19,7 +19,7 @@ from typing import Iterable, Optional
 
 import requests
 
-from . import classify
+from . import classify, proxy
 from .fetch import BASE_HEADERS
 
 CONTACT_PATHS = (
@@ -342,20 +342,65 @@ def _get_fingerprint(url: str, timeout: int) -> Fetched:
         )
 
 
+def _get_proxy(url: str, timeout: int, provider: Optional[str]) -> Fetched:
+    """Tier 3 - come from a different address entirely.
+
+    Reached only when the first two tiers failed, so the cost falls on the
+    minority of sites that actually refuse us. Measuring a live run showed
+    the wins here are not only bot challenges: a host answering 402 and one
+    with an expired certificate both returned normally from another IP,
+    which is why RETRYABLE is wider than "challenged".
+    """
+    answer = proxy.fetch(url, timeout=timeout, provider=provider)
+    tier = answer["provider"] or "proxy"
+    if answer["body"] is None:
+        return Fetched(outcome="error", tier=tier, error=answer["error"],
+                       status=answer["status"])
+    return Fetched(
+        body=answer["body"],
+        status=answer["status"],
+        outcome=read_outcome(answer["status"], answer["body"],
+                             answer["headers"]),
+        tier=tier,
+        error=answer["error"],
+    )
+
+
 def _get(
     session: requests.Session,
     url: str,
     timeout: int,
     *,
     use_fingerprint: bool = True,
+    use_proxy: bool = False,
+    proxy_provider: Optional[str] = None,
+    proxy_mode: str = "fallback",
 ) -> Fetched:
-    """Fetch one page, escalating to the fingerprint tier on a challenge."""
+    """Fetch one page, escalating through the tiers until one succeeds."""
+    # proxy_mode="always" skips straight to the proxy - for callers on an
+    # unmetered plan who want every request to leave from one.
+    if use_proxy and proxy_mode == "always":
+        viaproxy = _get_proxy(url, timeout, proxy_provider)
+        if viaproxy.ok:
+            return viaproxy
+
     result = _get_requests(session, url, timeout)
+
     if result.outcome == "challenged" and use_fingerprint:
         retried = _get_fingerprint(url, timeout)
         # Keep the retry only if it actually got us further.
         if retried.ok or retried.outcome != "error":
-            return retried
+            result = retried
+        if result.ok:
+            return result
+
+    if use_proxy and not result.ok and proxy.should_retry(result.outcome):
+        viaproxy = _get_proxy(url, timeout, proxy_provider)
+        # Only adopt the proxy answer when it beat the direct one; a failed
+        # proxy must never mask the real reason the site did not load.
+        if viaproxy.ok:
+            return viaproxy
+
     return result
 
 
@@ -391,6 +436,9 @@ def _collect(
     timeout: int,
     follow_contact_pages: bool,
     use_fingerprint: bool = True,
+    use_proxy: bool = False,
+    proxy_provider: Optional[str] = None,
+    proxy_mode: str = "fallback",
 ) -> tuple[dict, list[Candidate], str]:
     """Fetch a site and harvest candidates. No classification, no scoring.
 
@@ -416,7 +464,9 @@ def _collect(
         "fetch_outcome": "ok",
     }
 
-    page = _get(session, url, timeout, use_fingerprint=use_fingerprint)
+    page = _get(session, url, timeout, use_fingerprint=use_fingerprint,
+                use_proxy=use_proxy, proxy_provider=proxy_provider,
+                proxy_mode=proxy_mode)
     result["pages_fetched"] += 1
     result["tier"] = page.tier
     result["fetch_outcome"] = page.outcome
@@ -437,7 +487,9 @@ def _collect(
         base = f"{parts.scheme}://{parts.netloc}"
         for path in CONTACT_PATHS:
             sub = _get(session, base + path, timeout,
-                       use_fingerprint=use_fingerprint)
+                       use_fingerprint=use_fingerprint,
+                       use_proxy=use_proxy, proxy_provider=proxy_provider,
+                       proxy_mode=proxy_mode)
             result["pages_fetched"] += 1
             if not sub.ok:
                 continue
@@ -473,13 +525,17 @@ def enrich_site(
     timeout: int = DEFAULT_TIMEOUT,
     follow_contact_pages: bool = True,
     use_fingerprint: bool = True,
+    use_proxy: bool = False,
+    proxy_provider: Optional[str] = None,
+    proxy_mode: str = "fallback",
     use_llm: bool = False,
     provider: Optional[str] = None,
     model: Optional[str] = None,
 ) -> dict:
     """Fetch one website and return whatever contact details it exposes."""
     result, candidates, site_host = _collect(
-        website, session, timeout, follow_contact_pages, use_fingerprint
+        website, session, timeout, follow_contact_pages, use_fingerprint,
+        use_proxy, proxy_provider, proxy_mode
     )
     kinds = classify.classify_parts(
         [c.email.partition("@")[0] for c in candidates],
@@ -507,6 +563,9 @@ def enrich_records(
     only_missing_email: bool = True,
     follow_contact_pages: bool = True,
     use_fingerprint: bool = True,
+    use_proxy: bool = False,
+    proxy_provider: Optional[str] = None,
+    proxy_mode: str = "fallback",
     use_llm: bool = False,
     provider: Optional[str] = None,
     model: Optional[str] = None,
@@ -535,7 +594,8 @@ def enrich_records(
         session = requests.Session()
         session.headers.update(BASE_HEADERS)
         return site, _collect(
-            site, session, timeout, follow_contact_pages, use_fingerprint
+            site, session, timeout, follow_contact_pages, use_fingerprint,
+            use_proxy, proxy_provider, proxy_mode
         )
 
     with ThreadPoolExecutor(max_workers=threads) as pool:

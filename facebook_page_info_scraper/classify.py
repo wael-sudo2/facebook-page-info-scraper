@@ -11,6 +11,8 @@ import os
 import re
 from typing import Iterable, Optional
 
+from . import envfile
+
 
 PROVIDERS: dict[str, dict] = {
     "deepseek": {
@@ -105,6 +107,7 @@ def _has_package(name: str) -> bool:
 
 def providers_available() -> list[str]:
     """Which providers are usable right now - key present and SDK installed."""
+    envfile.load()
     return [
         name for name in PROVIDER_ORDER
         if name in PROVIDERS and _has_key(name) and _has_package(name)
@@ -118,6 +121,7 @@ def resolve(
 
     Explicit argument wins, then FBPS_LLM_PROVIDER, then PROVIDER_ORDER.
     """
+    envfile.load()
     choice = provider or os.environ.get("FBPS_LLM_PROVIDER") or None
     if choice:
         choice = choice.strip().lower()

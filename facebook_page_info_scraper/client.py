@@ -54,11 +54,23 @@ def _failure(url: str, requested: Optional[str], reason: str, resp=None) -> dict
     return record
 
 
-def scrape_page(url: str, *, want_about: bool = True, timeout: int = 25) -> dict:
+def scrape_page(
+    url: str,
+    *,
+    want_about: bool = True,
+    timeout: int = 25,
+    use_proxy: bool = False,
+    proxy_provider: Optional[str] = None,
+) -> dict:
     """Scrape one page. Always returns a dict; check `ok`.
 
     want_about=False reads only the document head - faster, but yields just
     the Open Graph fields (no email/phone).
+
+    use_proxy routes the request through a real HTTP proxy (FBPS_PROXY_URL),
+    which is what helps when Facebook rate-limits your address at high
+    concurrency. A scraping API is refused here: it builds its own request,
+    and Facebook then omits the About payload.
     """
     target = P.clean_link(url)
     if not target:
@@ -66,7 +78,8 @@ def scrape_page(url: str, *, want_about: bool = True, timeout: int = 25) -> dict
 
     started = time.perf_counter()
     response: Response = fetch(
-        target, _session(), want_about=want_about, timeout=timeout
+        target, _session(), want_about=want_about, timeout=timeout,
+        use_proxy=use_proxy, proxy_provider=proxy_provider,
     )
 
     if response.error:
@@ -100,6 +113,8 @@ def scrape_pages(
     threads: int = DEFAULT_THREADS,
     want_about: bool = True,
     timeout: int = 25,
+    use_proxy: bool = False,
+    proxy_provider: Optional[str] = None,
 ) -> list[dict]:
     """Scrape many pages concurrently. Order matches the input."""
     urls = [u.strip() for u in urls if u and u.strip()]
@@ -108,7 +123,9 @@ def scrape_pages(
 
     def work(url: str) -> dict:
         try:
-            return scrape_page(url, want_about=want_about, timeout=timeout)
+            return scrape_page(url, want_about=want_about,
+                               timeout=timeout, use_proxy=use_proxy,
+                               proxy_provider=proxy_provider)
         except Exception as exc:  # a worker must never kill the batch
             return _failure(url, None, repr(exc)[:200])
 
