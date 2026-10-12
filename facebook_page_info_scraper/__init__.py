@@ -7,6 +7,7 @@ from .enrich import (
     fingerprint_available,
     summarise_enrichment,
 )
+from .proxy import available as proxy_available, describe as proxy_status
 
 __all__ = [
     "scrape_page",
@@ -16,6 +17,8 @@ __all__ = [
     "enrich_site",
     "summarise_enrichment",
     "fingerprint_available",
+    "proxy_available",
+    "proxy_status",
     "FacebookPageInfoScraper",
     "FacebookPageSpider",
     "__version__",

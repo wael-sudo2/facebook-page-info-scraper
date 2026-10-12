@@ -107,6 +107,8 @@ def fetch(
     want_about: bool = True,
     timeout: int = 25,
     cap: Optional[int] = None,
+    use_proxy: bool = False,
+    proxy_provider: Optional[str] = None,
 ) -> Response:
     """GET `url`, reading only as far as needed.
 
@@ -115,11 +117,20 @@ def fetch(
     The page language is forced to DEFAULT_LOCALE and is not an option -
     extraction matches Facebook's English About labels, so any other
     language returns empty fields.
+
+    use_proxy routes through a real HTTP proxy, for IP rate limits at high
+    concurrency. Only an actual proxy is accepted: a scraping API builds
+    the request itself, and Facebook then withholds the About payload.
     """
     session = session or new_session()
     marker = ABOUT_MARKER if want_about else HEAD_MARKER
     limit = cap or (FULL_CAP if want_about else HEAD_CAP)
     target = with_locale(url, DEFAULT_LOCALE)
+
+    proxies = None
+    if use_proxy:
+        from . import proxy as _proxy
+        proxies = _proxy.proxies_for(proxy_provider)
 
     started = time.perf_counter()
     result = Response(url=url)
@@ -128,7 +139,8 @@ def fetch(
 
     try:
         with session.get(
-            target, timeout=timeout, stream=True, allow_redirects=True
+            target, timeout=timeout, stream=True, allow_redirects=True,
+            proxies=proxies,
         ) as response:
             result.status = response.status_code
             result.final_url = response.url

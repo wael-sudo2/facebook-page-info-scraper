@@ -24,6 +24,34 @@
 
 ---
 
+<div align="center">
+
+<a href="https://scrapingant.com/?ref=y2qyntz">
+<img src="https://raw.githubusercontent.com/wael-sudo2/facebook-page-info-scraper/main/docs/scrapingant.jpg"
+     alt="ScrapingAnt" width="460">
+</a>
+
+### Recommended proxy
+
+When **contact enrichment** meets a company site that refuses a direct
+request, [**ScrapingAnt**](https://scrapingant.com/?ref=y2qyntz) returns it
+from a residential IP behind a single API key — in testing it cleared sites
+this library could not reach on its own.
+
+```python
+enrich_records(records, use_proxy=True)
+```
+
+<sub>For scraping Facebook itself, use a plain proxy instead — see below.</sub>
+
+<sub>Affiliate link — subscribing through it supports this project at no extra
+cost to you.<br>
+Entirely optional: any proxy works, and the package ships with none.</sub>
+
+</div>
+
+---
+
 ## ⚡ Quick start
 
 ```bash
@@ -127,6 +155,23 @@ run(urls, threads=8,                   # pages rendered at once, no cap
 ```
 
 `want_about=False` reads only the page header — faster, but no email or phone.
+
+**Scraping through a proxy.** Facebook rate-limits by IP, so at high thread
+counts a rotating address helps:
+
+```bash
+FBPS_PROXY_URL=http://user:pass@host:port
+```
+```python
+scrape_pages(urls, threads=16, use_proxy=True)
+```
+
+Only a *real* HTTP proxy works here, and the library refuses anything else
+with an explanation. A scraping API builds the request itself, and Facebook
+then withholds the prefetched About payload — measured on live pages, the
+same page drops from **6 extracted fields to 3**, losing email, phone,
+category and address. Rotating your own exit IP keeps our headers intact and
+costs you nothing in data.
 
 > The browser engine downloads Chromium (~150 MB) the first time it runs —
 > pip cannot fetch browser binaries, so it happens on first use. One time
@@ -248,6 +293,43 @@ How often this is needed varies a lot. A probe of 100 sites measured 7%
 challenged; re-testing the same sites later found only one still challenging.
 Treat any single measurement as a snapshot.
 
+A handful stay blocked even then, and some fail for reasons a fingerprint
+cannot fix — a payment-required host, an expired certificate, an IP-based
+geo-block. Those are the cases a proxy answers, by coming from a different
+address entirely.
+
+### Recommended: ScrapingAnt
+
+<a href="https://scrapingant.com/?ref=y2qyntz">
+<img src="https://raw.githubusercontent.com/wael-sudo2/facebook-page-info-scraper/main/docs/scrapingant.jpg"
+     alt="ScrapingAnt - residential proxy and scraping API" width="320">
+</a>
+
+This is the one I reach for on this job, for three reasons that matter here
+specifically:
+
+- **Nothing to plumb.** One key and a plain HTTP endpoint — no proxy
+  credentials, no rotation logic, no session handling to get wrong.
+- **Residential IPs by default**, which is what the awkward failures need:
+  the geo-blocks and reputation blocks that a browser fingerprint alone
+  cannot talk its way past.
+- **It cleared sites this library could not reach on its own.** Testing it
+  against real failures from a live run, it returned pages from a
+  payment-required host and from one with an expired certificate — both of
+  which the built-in tiers gave up on.
+
+Their [docs](https://docs.scrapingant.com/) cover the API, and
+[pricing](https://scrapingant.com/?ref=y2qyntz) has current plans and the
+free allowance.
+
+<sub>Affiliate link — subscribing through it supports this project at no
+extra cost to you.</sub>
+
+**Already have a proxy? Use it.** Point the library at any standard
+`http://user:pass@host:port` — Bright Data, Oxylabs, Smartproxy, a box you
+rent. Nothing here is tied to one vendor, and the package ships with no
+proxy dependency at all.
+
 </details>
 
 <details>
@@ -317,6 +399,9 @@ enrich_records(records,
                only_missing_email=True,
                follow_contact_pages=True,
                use_fingerprint=True,
+               use_proxy=False,
+               proxy_provider=None,
+               proxy_mode="fallback",
                use_llm=False,
                provider=None,
                model=None)
@@ -329,9 +414,30 @@ enrich_records(records,
 | `only_missing_email` | `True` | Skip records that already have an email. Set `False` to re-check every record, e.g. to cross-check what Facebook listed. |
 | `follow_contact_pages` | `True` | When the homepage has no email, try `/contact`, `/kontakt`, `/contacto`, `/impressum` and friends. This is what lifts the hit rate from ~35% to ~50% — set `False` for homepage-only, which is much faster and much less thorough. |
 | `use_fingerprint` | `True` | Retry bot-challenged sites with a real browser's TLS fingerprint. Set `False` to skip the retry and report them as `challenged`. |
+| `use_proxy` | `False` | Retry through a proxy when a site refuses you directly. Off by default because it costs money. |
+| `proxy_provider` | `None` | `"custom"` (your own proxy) or `"scrapingant"`. `None` picks whichever is configured. |
+| `proxy_mode` | `"fallback"` | `"fallback"` proxies only the sites that failed. `"always"` routes every request through it — for unmetered plans. |
 | `use_llm` | `False` | Label each address `role` or `personal`. Needs an API key; off by default because it costs money. Everything else works either way. |
 | `provider` | `None` | `"deepseek"` or `"openai"`. `None` picks whichever key is set. |
 | `model` | `None` | Override the provider's default model — `deepseek-chat` or `gpt-4o-mini`. |
+
+**Configuration.** Put either of these in a `.env` beside your script, or
+export them — real environment variables win over the file:
+
+```bash
+FBPS_PROXY_URL=http://user:pass@host:port   # any proxy you already have
+ANT_API_KEY=your_scrapingant_key            # or SCRAPINGANT_API_KEY
+```
+
+```python
+from facebook_page_info_scraper import proxy_status, proxy_available
+
+proxy_status()       # what is configured, without printing any secret
+proxy_available()    # True if a proxy is ready to use
+```
+
+Already using `HTTPS_PROXY`? `requests` honours it on every call, so it is
+in effect from the first tier and needs none of this.
 
 One site at a time, if you prefer:
 
@@ -546,7 +652,10 @@ open an issue or submit a pull request on GitHub.
 ## 📝 Notes
 
 - Only public pages. Nothing behind a login.
-- Be reasonable with `threads` — this hits Facebook from your IP.
+- Be reasonable with `threads` — this hits Facebook from your IP. Set
+  `FBPS_PROXY_URL` and `use_proxy=True` to spread the load across a proxy.
+- Enrichment hits third-party company websites, not Facebook. The same
+  courtesy applies, and each site is fetched once per run.
 - Scraping Facebook is against their Terms of Service. Use accordingly.
 
 ## License
